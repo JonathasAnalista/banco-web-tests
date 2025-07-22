@@ -8,7 +8,7 @@ describe('Login', () => {
     // Act
     cy.fixture('credenciais').then(credenciais => {
       cy.get('#username').click().type(credenciais.valida.usuario)
-      cy.get('#senha').click().type(credenciais.invalida.senha)
+      cy.get('#senha').click().type(credenciais.valida.senha)
     })
 
     cy.screenshot('apos-preencher-dados-validos')
@@ -18,7 +18,7 @@ describe('Login', () => {
 
 
     // Assert
-    // cy.contains('h4','Realizar Transferência').should('be.visible') 
+    cy.contains('h4','Realizar Transferência').should('be.visible') 
   })
 
   it('Login com dados inválidos deve apresentar mensagem de erro', () => {
