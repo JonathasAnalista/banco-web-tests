@@ -1,28 +1,27 @@
 describe('Transferências', () =>{
     beforeEach(() => {
       cy.visit('/') 
-      cy.fixture('credenciais').then(credenciais => {
-        cy.get('#username').click().type(credenciais.valida.usuario)
-        cy.get('#senha').click().type(credenciais.valida.senha)
-      }) 
-      cy.contains('button', 'Entrar').click()
+      cy.fazerLoginComCredenciaisValidas()
+
     })
 
     it('Deve transferir quando informo dados e valor válidos', () => {
-      cy.get('label[for="conta-origem"]').parent().as('Campo-conta-origem')
-      cy.get('@Campo-conta-origem').click()
-      cy.get('@Campo-conta-origem').contains('Maria Oliveira').click()
+      // Act
+      cy.realizarTransferencia('Maria Oliveira', 'João da Silva', '11' )
 
-      cy.get('label[for="conta-destino"]').parent().as('Campo-conta-destino')
-      cy.get('@Campo-conta-destino').click()
-      cy.get('@Campo-conta-destino').contains('João da Silva').click()
-
-      cy.get('#valor').click().type('11')
-
-      cy.contains('button', 'Transferir').click()
-
-      cy.get('.toast').should('have.text', 'Transferência realizada!')
+      // Assert
+      cy.verificarMensagemNoToast('Transferência realizada!')
 
     })
+
+    it('Deve apresentar erro quando tentar transferir mais de 5 mil sem o token', () => {
+      // Act
+      cy.realizarTransferencia('Maria Oliveira', 'João da Silva', '6000' )
+
+     // Assert
+      cy.verificarMensagemNoToast('Saldo insuficiente para realizar a transferência.')
+
+    })
+
 
 })
